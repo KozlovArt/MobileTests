@@ -21,19 +21,20 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 public class LocalDriver implements WebDriverProvider {
 
+    MobileConfig config = ConfigFactory.create(MobileConfig.class, System.getProperties());
+
     @Nonnull
     @Override
     public WebDriver createDriver(@Nonnull Capabilities capabilities) {
         UiAutomator2Options options = new UiAutomator2Options();
-        MobileConfig config = ConfigFactory.create(MobileConfig.class, System.getProperties());
 
         options.setAutomationName(ANDROID_UIAUTOMATOR2)
                 .setPlatformName(ANDROID)
                 .setPlatformVersion(config.getSystemVersion())
                 .setDeviceName(config.getDeviceModel())
                 .setApp(getAppPath())
-                .setAppPackage("org.wikipedia.alpha")
-                .setAppActivity("org.wikipedia.main.MainActivity");
+                .setAppPackage(config.getAppPackage())
+                .setAppActivity(config.getAppActivity());
 
         return new AndroidDriver(getAppiumServerUrl(), options);
     }
@@ -47,9 +48,8 @@ public class LocalDriver implements WebDriverProvider {
     }
 
     private String getAppPath() {
-        String appVersion = "app-alpha-universal-release.apk";
-        String appUrl = "https://github.com/wikimedia/apps-android-wikipedia" +
-                "/releases/download/latest/" + appVersion;
+        String appVersion = config.getAppVersion();
+        String appUrl = config.getAppUrl() + appVersion;
         String appPath = "src/test/resources/apps/" + appVersion;
 
         File app = new File(appPath);

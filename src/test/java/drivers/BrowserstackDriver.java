@@ -20,11 +20,11 @@ public class BrowserstackDriver implements WebDriverProvider {
         MobileConfig config = ConfigFactory.create(MobileConfig.class, System.getProperties());
 
         // Set your access credentials
-        caps.setCapability("browserstack.user", "bsuser_0DpZAV");
-        caps.setCapability("browserstack.key", "26dchUaRjmryfKLCdp56");
+        caps.setCapability("browserstack.user", config.getBrowserstackUser());
+        caps.setCapability("browserstack.key", config.getBrowserstackKey());
 
         // Set URL of the application under test
-        caps.setCapability("app", "bs://e93a4f39691b59848c8de51621acc5df0a29d878");
+        caps.setCapability("app", config.getBrowserstackApp());
 
         // Specify device and os_version for testing
         caps.setCapability("device", config.getDeviceModel());
